@@ -1,0 +1,3 @@
+[submodule "r-cheatsheets"]
+	path = r-cheatsheets
+	url = git@github.com:pawan1198/r-cheatsheets.git
