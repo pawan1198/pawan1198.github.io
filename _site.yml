@@ -1,0 +1,54 @@
+name: "D6_Distill_Webpage"
+title: "Ecological Dynamics"
+description: |
+  Ecological Dynamics
+output_dir: "docs"
+#creative_commons: CC BY
+language:
+  label:
+    fig.cap: ''
+favicon: img/d6_purple_round.png
+theme: "d6theme.css"
+twitter:
+  site: "@EcoDynIZW"
+navbar:
+  logo:
+    image: img/d6_white.png
+  search: true
+  right:
+    - text: "Teams"
+      menu:
+        - text: "Individual Dynamics"
+          href: team-individual.html
+        - text: "Population Dynamics"
+          href: team-population.html
+        - text: "Biodiversity Dynamics"
+          href: team-biodiversity.html
+    - text: "Research"
+      menu:
+        - text: "Publications"
+          href: publications.html
+        - text: "Repositories"
+          href: repositories.html
+        - text: "Guidelines"
+          href: guidelines.html
+        - text: "Doctoral Theses"
+          href: doctoral-theses.html
+        - text: "Msc/Bsc Theses"
+          href: msc-bsc-theses.html
+    - text: "Teaching"
+      href: teaching.html
+    - text: "Wiki"
+      href: wiki.html
+    #- text: "Ressources"
+    #  menu:
+    #    - text: "Guidelines"
+    #      href: guidelines.html
+    #    - text: "Wiki"
+    #      href: wiki.html
+    #- text: "About"
+    #  href: about.html
+    - icon: fa fa-twitter
+      href: https://twitter.com/EcoDynIZW
+  source_url: https://github.com/EcoDynIZW
+output: distill::distill_article
