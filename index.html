@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Awesome ggplot2 — A Curated R Visualization Resource Hub</title>
+  <meta name="description" content="A curated list of awesome ggplot2 packages, tutorials, books, and resources for R data visualization." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=Cabinet+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── TOKENS ─── */
+    :root {
+      --bg:        #0d0f14;
+      --surface:   #13161e;
+      --surface2:  #1b1f2b;
+      --border:    #252a38;
+      --accent:    #e85d4a;
+      --accent2:   #f0a500;
+      --accent3:   #4ec9b0;
+      --text:      #c8cfe0;
+      --muted:     #5c6380;
+      --heading:   #edf0f8;
+      --tag-bg:    #1e2230;
+      --radius:    10px;
+      --mono:      'DM Mono', monospace;
+      --sans:      'Cabinet Grotesk', sans-serif;
+      --serif:     'Fraunces', serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    a { color: var(--accent3); text-decoration: none; transition: color .2s; }
+    a:hover { color: var(--accent2); }
+
+    /* ─── NOISE OVERLAY ─── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: .025;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      padding: 80px 24px 64px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0; z-index: -1;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 30%, rgba(232,93,74,.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 70%, rgba(78,201,176,.08) 0%, transparent 60%),
+        radial-gradient(ellipse 100% 100% at 50% 0%, rgba(240,165,0,.05) 0%, transparent 70%);
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--accent);
+      border: 1px solid rgba(232,93,74,.3);
+      padding: 4px 12px; border-radius: 100px;
+      margin-bottom: 24px;
+      animation: fadeDown .6s ease both;
+    }
+    .hero-badge::before { content: '◉'; font-size: 9px; }
+
+    h1.hero-title {
+      font-family: var(--serif);
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 300;
+      color: var(--heading);
+      line-height: 1.05;
+      letter-spacing: -.03em;
+      animation: fadeDown .6s .1s ease both;
+    }
+    h1.hero-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+    .hero-sub {
+      margin-top: 16px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--muted);
+      animation: fadeDown .6s .2s ease both;
+    }
+    .hero-meta {
+      margin-top: 32px;
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;
+      animation: fadeDown .6s .3s ease both;
+    }
+    .hero-stat {
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .hero-stat-n {
+      font-family: var(--serif); font-size: 2.2rem; color: var(--heading);
+      line-height: 1;
+    }
+    .hero-stat-l {
+      font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--muted); margin-top: 4px;
+    }
+    .stat-divider { width: 1px; background: var(--border); height: 40px; align-self: center; }
+
+    /* ─── SEARCH BAR ─── */
+    .search-wrap {
+      max-width: 620px; margin: 32px auto 0;
+      animation: fadeDown .6s .35s ease both;
+    }
+    .search-inner {
+      position: relative;
+    }
+    .search-icon {
+      position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+      color: var(--muted); pointer-events: none;
+      font-family: var(--mono); font-size: 14px;
+    }
+    #search {
+      width: 100%;
+      padding: 14px 16px 14px 44px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      color: var(--heading);
+      font-family: var(--mono);
+      font-size: 14px;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    #search::placeholder { color: var(--muted); }
+    #search:focus {
+      border-color: var(--accent3);
+      box-shadow: 0 0 0 3px rgba(78,201,176,.1);
+    }
+    #search-count {
+      margin-top: 8px; text-align: right;
+      font-family: var(--mono); font-size: 11px; color: var(--muted);
+      min-height: 18px;
+    }
+
+    /* ─── FILTER TABS ─── */
+    .filter-bar {
+      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+      padding: 0 24px 40px;
+      animation: fadeDown .6s .4s ease both;
+    }
+    .filter-btn {
+      padding: 6px 16px;
+      border-radius: 100px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all .2s;
+      letter-spacing: .04em;
+    }
+    .filter-btn:hover { border-color: var(--accent3); color: var(--accent3); }
+    .filter-btn.active {
+      background: var(--accent3);
+      border-color: var(--accent3);
+      color: #0d0f14;
+      font-weight: 500;
+    }
+
+    /* ─── LAYOUT ─── */
+    .layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 0;
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    @media (max-width: 860px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+    }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      padding-right: 32px;
+      position: sticky;
+      top: 24px;
+      align-self: start;
+      height: fit-content;
+    }
+    .sidebar-title {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .toc-list { list-style: none; }
+    .toc-list li + li { margin-top: 2px; }
+    .toc-list a {
+      display: block;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: var(--muted);
+      transition: all .15s;
+    }
+    .toc-list a:hover, .toc-list a.active {
+      background: var(--surface);
+      color: var(--accent3);
+    }
+    .toc-sub {
+      list-style: none;
+      margin-left: 12px;
+    }
+    .toc-sub a { font-size: 12px; }
+
+    /* ─── MAIN CONTENT ─── */
+    .main { min-width: 0; }
+
+    /* ─── SECTIONS ─── */
+    .section {
+      margin-bottom: 56px;
+      transition: opacity .2s;
+    }
+    .section.hidden { display: none; }
+
+    .section-header {
+      display: flex; align-items: baseline; gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-title {
+      font-family: var(--serif);
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--heading);
+    }
+    .section-count {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      background: var(--surface2);
+      padding: 2px 8px;
+      border-radius: 100px;
+    }
+
+    /* ─── SUB-SECTIONS ─── */
+    .subsection { margin-bottom: 32px; }
+    .subsection-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .subsection-title::before {
+      content: '';
+      display: inline-block; width: 18px; height: 1px;
+      background: var(--accent2);
+    }
+
+    /* ─── CARDS GRID ─── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--accent3), var(--accent));
+      opacity: 0;
+      transition: opacity .2s;
+    }
+    .card:hover {
+      border-color: rgba(78,201,176,.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,.3);
+    }
+    .card:hover::before { opacity: 1; }
+
+    .card-pkg {
+      font-family: var(--mono);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent3);
+      margin-bottom: 6px;
+    }
+    .card-pkg a { color: inherit; }
+    .card-pkg a:hover { color: var(--accent2); }
+
+    .card-desc {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+    .card.hidden { display: none; }
+
+    /* ─── SIMPLE LIST (books, tutorials, etc.) ─── */
+    .resource-list { list-style: none; }
+    .resource-list li {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      transition: opacity .2s;
+    }
+    .resource-list li:last-child { border-bottom: none; }
+    .resource-list li.hidden { display: none; }
+    .resource-list .ri-bullet {
+      flex-shrink: 0;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin-top: 8px;
+    }
+    .resource-list .ri-body { flex: 1; min-width: 0; }
+    .resource-list .ri-title {
+      font-size: 14px; color: var(--heading);
+      display: block; margin-bottom: 2px;
+    }
+    .resource-list .ri-sub {
+      font-family: var(--mono); font-size: 11px; color: var(--muted);
+    }
+
+    /* ─── PERSONS ─── */
+    .persons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+    }
+    .person-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      transition: all .2s;
+    }
+    .person-card:hover {
+      border-color: rgba(240,165,0,.3);
+      transform: translateY(-1px);
+    }
+    .person-name {
+      font-size: 14px; font-weight: 500;
+      color: var(--heading); margin-bottom: 4px;
+    }
+    .person-name a { color: inherit; }
+    .person-name a:hover { color: var(--accent2); }
+    .person-twitter {
+      font-family: var(--mono); font-size: 11px; color: var(--muted);
+    }
+    .person-twitter a { color: var(--muted); }
+    .person-twitter a:hover { color: var(--accent2); }
+    .person-card.hidden { display: none; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 36px 24px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    footer a { color: var(--muted); }
+    footer a:hover { color: var(--accent3); }
+    footer .f-row { margin-top: 8px; }
+
+    /* ─── BACK TO TOP ─── */
+    #btt {
+      position: fixed; bottom: 28px; right: 28px;
+      width: 40px; height: 40px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      font-size: 16px; color: var(--muted);
+      opacity: 0; pointer-events: none;
+      transition: all .3s;
+      z-index: 100;
+    }
+    #btt.visible { opacity: 1; pointer-events: all; }
+    #btt:hover { border-color: var(--accent3); color: var(--accent3); }
+
+    /* ─── ANIMATIONS ─── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── EMPTY STATE ─── */
+    .empty-state {
+      display: none;
+      text-align: center;
+      padding: 64px 24px;
+      font-family: var(--mono);
+      color: var(--muted);
+    }
+    .empty-state.visible { display: block; }
+    .empty-state-icon { font-size: 2.5rem; margin-bottom: 12px; }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<header class="hero">
+  <div class="hero-badge">Awesome List · R Data Visualization</div>
+  <h1 class="hero-title">Awesome <em>ggplot2</em></h1>
+  <p class="hero-sub">library(ggplot2) &nbsp;#&nbsp; A curated resource hub for R visualization</p>
+
+  <div class="hero-meta">
+    <div class="hero-stat">
+      <span class="hero-stat-n" id="pkg-count">120+</span>
+      <span class="hero-stat-l">R Packages</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="hero-stat">
+      <span class="hero-stat-n">40+</span>
+      <span class="hero-stat-l">Tutorials</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="hero-stat">
+      <span class="hero-stat-n">9</span>
+      <span class="hero-stat-l">Key Authors</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="hero-stat">
+      <span class="hero-stat-n">4</span>
+      <span class="hero-stat-l">Books</span>
+    </div>
+  </div>
+
+  <!-- Search -->
+  <div class="search-wrap">
+    <div class="search-inner">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="search" placeholder="Search packages, tutorials, topics…" autocomplete="off" />
+    </div>
+    <div id="search-count"></div>
+  </div>
+</header>
+
+<!-- ═══ FILTER TABS ═══ -->
+<nav class="filter-bar" id="filter-bar">
+  <button class="filter-btn active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="packages">R Packages</button>
+  <button class="filter-btn" data-filter="tutorials">Tutorials</button>
+  <button class="filter-btn" data-filter="books">Books</button>
+  <button class="filter-btn" data-filter="spatial">Spatial</button>
+  <button class="filter-btn" data-filter="themes">Themes</button>
+  <button class="filter-btn" data-filter="people">People</button>
+</nav>
+
+<!-- ═══ MAIN LAYOUT ═══ -->
+<div class="layout">
+
+  <!-- Sidebar TOC -->
+  <aside class="sidebar">
+    <p class="sidebar-title">Contents</p>
+    <ul class="toc-list">
+      <li><a href="#sec-general">General</a></li>
+      <li><a href="#sec-people">People</a></li>
+      <li>
+        <a href="#sec-packages">R Packages</a>
+        <ul class="toc-sub">
+          <li><a href="#sub-geometrics">Geometrics</a></li>
+          <li><a href="#sub-themes">Themes</a></li>
+          <li><a href="#sub-presentation">Presentation</a></li>
+          <li><a href="#sub-spatial">Spatial</a></li>
+          <li><a href="#sub-icons">Icons & Images</a></li>
+          <li><a href="#sub-data">Data & Models</a></li>
+        </ul>
+      </li>
+      <li><a href="#sec-books">Books</a></li>
+      <li><a href="#sec-tutorials">Tutorials</a></li>
+      <li><a href="#sec-videos">Video Tutorials</a></li>
+      <li><a href="#sec-galleries">Galleries</a></li>
+      <li><a href="#sec-misc">Miscellaneous</a></li>
+    </ul>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- ── GENERAL ── -->
+    <section class="section" id="sec-general" data-category="general">
+      <div class="section-header">
+        <h2 class="section-title">General</h2>
+      </div>
+      <ul class="resource-list">
+        <li data-search="official website ggplot2 tidyverse">
+          <span class="ri-bullet"></span>
+          <span class="ri-body">
+            <a class="ri-title" href="https://ggplot2.tidyverse.org/" target="_blank">Official ggplot2 Website</a>
+            <span class="ri-sub">ggplot2.tidyverse.org · Full reference, function docs, news</span>
+          </span>
+        </li>
+        <li data-search="reference index functions api">
+          <span class="ri-bullet"></span>
+          <span class="ri-body">
+            <a class="ri-title" href="https://ggplot2.tidyverse.org/reference/index.html" target="_blank">Function Reference Index</a>
+            <span class="ri-sub">Complete A–Z listing of all ggplot2 functions & geoms</span>
+          </span>
+        </li>
+        <li data-search="cheatsheet data visualization pdf rstudio">
+          <span class="ri-bullet"></span>
+          <span class="ri-body">
+            <a class="ri-title" href="https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf" target="_blank">Data Visualization Cheat Sheet</a>
+            <span class="ri-sub">RStudio's classic ggplot2 quick-reference card (PDF)</span>
+          </span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ── PEOPLE ── -->
+    <section class="section" id="sec-people" data-category="people">
+      <div class="section-header">
+        <h2 class="section-title">Key People</h2>
+        <span class="section-count">9</span>
+      </div>
+      <div class="persons-grid">
+        <div class="person-card" data-search="hadley wickham creator ggplot2">
+          <p class="person-name"><a href="http://hadley.nz/" target="_blank">Hadley Wickham</a></p>
+          <p class="person-twitter"><a href="https://twitter.com/hadleywickham" target="_blank">@hadleywickham</a> · ggplot2 creator</p>
+        </div>
+        <div class="person-card" data-search="kieran healy data visualization sociology">
+          <p class="person-name"><a href="https://kieranhealy.org/" target="_blank">Kieran Healy</a></p>
+          <p class="person-twitter"><a href="https://twitter.com/kjhealy" target="_blank">@kjhealy</a></p>
+        </div>
+        <div class="person-card" data-search="claus wilke dataviz fundamentals cowplot">
+          <p class="person-name"><a href="https://clauswilke.com/" target="_blank">Claus Wilke</a></p>
+          <p class="person-twitter"><a href="https://twitter.com/ClausWilke" target="_blank">@ClausWilke</a></p>
+        </div>
+        <div class="person-card" data-search="thomas lin pedersen patchwork ggforce">
+          <p class="person-name"><a href="https://www.data-imaginist.com/" target="_blank">Thomas Lin Pedersen</a></p>
+          <p class="person-twitter"><a href="https://twitter.com/thomasp85" target="_blank">@thomasp85</a></p>
+        </div>
+        <div class="person-card" data-search="winston chang shiny rstudio">
+          <p class="person-name">Winston Chang</p>
+          <p class="person-twitter"><a href="https://twitter.com/winston_chang" target="_blank">@winston_chang</a></p>
+        </div>
+        <div class="person-card" data-search="lionel henry rlang tidyverse">
+          <p class="person-name"><a href="https://github.com/lionel-" target="_blank">Lionel Henry</a></p>
+          <p class="person-twitter"><a href="https://twitter.com/_lionelhenry" target="_blank">@_lionelhenry</a></p>
+        </div>
+        <div class="person-card" data-search="kara woo r packages">
+          <p class="person-name"><a href="https://karawoo.com/" target="_blank">Kara Woo</a></p>
+          <p class="person-twitter"><a href="https://twitter.com/kara_woo" target="_blank">@kara_woo</a></p>
+        </div>
+        <div class="person-card" data-search="hiroaki yutani gghighlight">
+          <p class="person-name"><a href="https://yutani.rbind.io/" target="_blank">Hiroaki Yutani</a></p>
+          <p class="person-twitter"><a href="https://twitter.com/yutannihilat_en" target="_blank">@yutannihilat_en</a></p>
+        </div>
+        <div class="person-card" data-search="dewey dunnington paleolimbot spatial">
+          <p class="person-name"><a href="https://fishandwhistle.net/" target="_blank">Dewey Dunnington</a></p>
+          <p class="person-twitter"><a href="https://twitter.com/paleolimbot" target="_blank">@paleolimbot</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── R PACKAGES ── -->
+    <section class="section" id="sec-packages" data-category="packages">
+      <div class="section-header">
+        <h2 class="section-title">R Packages</h2>
+        <span class="section-count">120+</span>
+      </div>
+
+      <!-- Geometrics -->
+      <div class="subsection" id="sub-geometrics">
+        <p class="subsection-title">Geometrics</p>
+        <div class="cards">
+          <div class="card" data-search="calendR calendar monthly yearly print"><p class="card-pkg"><a href="https://github.com/R-CoderDotCom/calendR" target="_blank">{calendR}</a></p><p class="card-desc">Fully customizable monthly and yearly calendars made with ggplot2</p></div>
+          <div class="card" data-search="complex-upset upset plots sets intersections"><p class="card-pkg"><a href="https://krassowski.github.io/complex-upset/" target="_blank">{complex-upset}</a></p><p class="card-desc">Complex UpSet plots with ggplot2 geoms for set visualization</p></div>
+          <div class="card" data-search="corrmorant correlation matrix flexible"><p class="card-pkg"><a href="https://github.com/r-link/corrmorant" target="_blank">{corrmorant}</a></p><p class="card-desc">Flexible correlation matrices based on ggplot2</p></div>
+          <div class="card" data-search="easyalluvial alluvial flow diagram single line"><p class="card-pkg"><a href="https://erblast.github.io/easyalluvial/" target="_blank">{easyalluvial}</a></p><p class="card-desc">Create alluvial plots with a single line of code</p></div>
+          <div class="card" data-search="econocharts economics supply demand charts"><p class="card-pkg"><a href="https://r-coder.com/economics-charts-r/" target="_blank">{econocharts}</a></p><p class="card-desc">Economics charts — supply/demand curves and more — in R</p></div>
+          <div class="card" data-search="geomnet network visualization graph nodes edges"><p class="card-pkg"><a href="http://sctyner.github.io/geomnet/" target="_blank">{geomnet}</a></p><p class="card-desc">Network visualization in the ggplot2 framework</p></div>
+          <div class="card" data-search="ggalluvial alluvial sankey flows"><p class="card-pkg"><a href="http://corybrunson.github.io/ggalluvial/" target="_blank">{ggalluvial}</a></p><p class="card-desc">ggplot2 extension for alluvial / Sankey plots</p></div>
+          <div class="card" data-search="ggalt extra coordinate geoms scales transformations"><p class="card-pkg"><a href="https://github.com/hrbrmstr/ggalt" target="_blank">{ggalt}</a></p><p class="card-desc">Extra coordinate systems, geoms, statistical transformations & scales</p></div>
+          <div class="card" data-search="ggambit chess fen board positions"><p class="card-pkg"><a href="https://github.com/cj-holmes/ggambit" target="_blank">{ggambit}</a></p><p class="card-desc">Visualise FEN chess positions with ggplot2</p></div>
+          <div class="card" data-search="gganatogram anatomy body organ diagrams"><p class="card-pkg"><a href="https://github.com/jespermaag/gganatogram" target="_blank">{gganatogram}</a></p><p class="card-desc">Create anatomical diagrams using ggplot2</p></div>
+          <div class="card" data-search="ggbeeswarm beeswarm column scatter jitter"><p class="card-pkg"><a href="https://github.com/eclarke/ggbeeswarm" target="_blank">{ggbeeswarm}</a></p><p class="card-desc">Column scatter / beeswarm-style plots — avoids overplotting</p></div>
+          <div class="card" data-search="ggblur blur point geom soft"><p class="card-pkg"><a href="https://github.com/coolbutuseless/ggblur" target="_blank">{ggblur}</a></p><p class="card-desc">Blurry point geom for ggplot2 — soft-glow effects</p></div>
+          <div class="card" data-search="ggbump bump chart ranking changes"><p class="card-pkg"><a href="https://github.com/davidsjoberg/ggbump" target="_blank">{ggbump}</a></p><p class="card-desc">Create bump charts to visualise rank changes over time</p></div>
+          <div class="card" data-search="ggchicklet rounded segmented bar chicklet"><p class="card-pkg"><a href="https://cinc.rud.is/web/packages/ggchicklet/" target="_blank">{ggchicklet}</a></p><p class="card-desc">Chicklet (rounded segmented column) charts</p></div>
+          <div class="card" data-search="ggdag causal dag directed acyclic graph"><p class="card-pkg"><a href="https://ggdag.malco.io/" target="_blank">{ggdag}</a></p><p class="card-desc">Visualise and analyse causal directed acyclic graphs (DAGs)</p></div>
+          <div class="card" data-search="ggdist distributions uncertainty ribbon halfeye"><p class="card-pkg"><a href="https://mjskay.github.io/ggdist/" target="_blank">{ggdist}</a></p><p class="card-desc">Visualizations of distributions and uncertainty (halfeye, ribbon, etc.)</p></div>
+          <div class="card" data-search="ggExtra marginal histogram scatter density"><p class="card-pkg"><a href="https://github.com/daattali/ggExtra" target="_blank">{ggExtra}</a></p><p class="card-desc">Add marginal histograms/densities to ggplot2 scatter plots</p></div>
+          <div class="card" data-search="gghalves half violin boxplot geom"><p class="card-pkg"><a href="https://erocoar.github.io/gghalves/" target="_blank">{gghalves}</a></p><p class="card-desc">Easy half-half geoms — split violin / half boxplot</p></div>
+          <div class="card" data-search="ggkeyboard keyboard layout keys visualise"><p class="card-pkg"><a href="https://github.com/sharlagelfand/ggkeyboard" target="_blank">{ggkeyboard}</a></p><p class="card-desc">Draw a keyboard with ggplot2</p></div>
+          <div class="card" data-search="ggmosaic mosaic plot categorical variables"><p class="card-pkg"><a href="https://haleyjeppson.github.io/ggmosaic/" target="_blank">{ggmosaic}</a></p><p class="card-desc">Mosaicplots for categorical data in the ggplot2 framework</p></div>
+          <div class="card" data-search="ggpointdensity scatter 2d density cross"><p class="card-pkg"><a href="https://github.com/LKremer/ggpointdensity" target="_blank">{ggpointdensity}</a></p><p class="card-desc">Cross between a scatter plot and a 2D density plot</p></div>
+          <div class="card" data-search="ggpubr publication ready plots journal figure"><p class="card-pkg"><a href="https://rpkgs.datanovia.com/ggpubr/" target="_blank">{ggpubr}</a></p><p class="card-desc">Publication-ready plots with ggplot2 — easy stat annotations</p></div>
+          <div class="card" data-search="ggradar radar spider chart polar"><p class="card-pkg"><a href="https://github.com/ricardo-bion/ggradar" target="_blank">{ggradar}</a></p><p class="card-desc">Radar / spider charts with ggplot2</p></div>
+          <div class="card" data-search="ggraph relational data graph network grammar"><p class="card-pkg"><a href="https://ggraph.data-imaginist.com/" target="_blank">{ggraph}</a></p><p class="card-desc">Grammar of graphics for relational / network data</p></div>
+          <div class="card" data-search="ggrepel labels text overlap avoid repel"><p class="card-pkg"><a href="https://ggrepel.slowkow.com/" target="_blank">{ggrepel}</a></p><p class="card-desc">Repel overlapping text labels away from each other automatically</p></div>
+          <div class="card" data-search="ggridges ridgeline density stacked distributions"><p class="card-pkg"><a href="https://wilkelab.org/ggridges/" target="_blank">{ggridges}</a></p><p class="card-desc">Ridgeline plots — stacked density distributions</p></div>
+          <div class="card" data-search="ggsignif significance brackets p-value annotation"><p class="card-pkg"><a href="https://github.com/const-ae/ggsignif" target="_blank">{ggsignif}</a></p><p class="card-desc">Add significance brackets and p-values to ggplots</p></div>
+          <div class="card" data-search="ggstream stream streamgraph area time series"><p class="card-pkg"><a href="https://github.com/davidsjoberg/ggstream" target="_blank">{ggstream}</a></p><p class="card-desc">Streamplots / streamgraphs for time-series composition</p></div>
+          <div class="card" data-search="ggtree phylogenetic tree biology evolution annotation"><p class="card-pkg"><a href="https://github.com/YuLab-SMU/ggtree" target="_blank">{ggtree}</a></p><p class="card-desc">Visualise and annotate phylogenetic trees</p></div>
+          <div class="card" data-search="ggvenn venn diagram sets overlap"><p class="card-pkg"><a href="https://github.com/yanlinlin82/ggvenn" target="_blank">{ggvenn}</a></p><p class="card-desc">Easy Venn diagrams with ggplot2</p></div>
+          <div class="card" data-search="ggwaffle waffle square pie chart proportion"><p class="card-pkg"><a href="https://liamgilbey.github.io/ggwaffle/" target="_blank">{ggwaffle}</a></p><p class="card-desc">Waffle charts — square pie for proportions</p></div>
+          <div class="card" data-search="ggwordcloud word cloud text frequency"><p class="card-pkg"><a href="https://lepennec.github.io/ggwordcloud/" target="_blank">{ggwordcloud}</a></p><p class="card-desc">Word cloud geom for ggplot2</p></div>
+          <div class="card" data-search="treemapify treemap rectangle proportional area"><p class="card-pkg"><a href="http://wilkox.org/treemapify/" target="_blank">{treemapify}</a></p><p class="card-desc">Draw treemaps in ggplot2</p></div>
+          <div class="card" data-search="waffle square pie chart icon array"><p class="card-pkg"><a href="https://github.com/hrbrmstr/waffle" target="_blank">{waffle}</a></p><p class="card-desc">Make waffle / square pie charts in R</p></div>
+          <div class="card" data-search="parttree decision tree partition boundary"><p class="card-pkg"><a href="https://github.com/grantmcdermott/parttree" target="_blank">{parttree}</a></p><p class="card-desc">Plot decision tree partition boundaries in R</p></div>
+          <div class="card" data-search="ggTimeSeries time series calendar heatmap horizon"><p class="card-pkg"><a href="https://github.com/AtherEnergy/ggTimeSeries" target="_blank">{ggTimeSeries}</a></p><p class="card-desc">Calendar heatmaps, horizon plots, and more for time series</p></div>
+        </div>
+      </div>
+
+      <!-- Themes -->
+      <div class="subsection" id="sub-themes">
+        <p class="subsection-title">Themes &amp; Aesthetics</p>
+        <div class="cards">
+          <div class="card" data-search="bbplot bbc news style chart export"><p class="card-pkg"><a href="https://github.com/bbc/bbplot" target="_blank">{bbplot}</a></p><p class="card-desc">Create charts in the style used by the BBC News data team</p></div>
+          <div class="card" data-search="cyberpunk neon dark style theme graph"><p class="card-pkg"><a href="https://github.com/r-coderdotcom/cyberpunk" target="_blank">{cyberpunk}</a></p><p class="card-desc">Cyberpunk-style graphs with R and ggplot2</p></div>
+          <div class="card" data-search="ggdark dark mode theme night"><p class="card-pkg"><a href="https://github.com/nsgrantham/ggdark" target="_blank">{ggdark}</a></p><p class="card-desc">Dark mode for all ggplot2 built-in themes</p></div>
+          <div class="card" data-search="ggeasy easy access commands simplified"><p class="card-pkg"><a href="https://github.com/jonocarroll/ggeasy" target="_blank">{ggeasy}</a></p><p class="card-desc">Easy access to 'ggplot2' commands — human-readable helpers</p></div>
+          <div class="card" data-search="ggfx filters shaders effects glow blur"><p class="card-pkg"><a href="https://github.com/thomasp85/ggfx" target="_blank">{ggfx}</a></p><p class="card-desc">Filters and shaders on ggplot2 layers — blur, glow, drop shadow</p></div>
+          <div class="card" data-search="gghighlight highlight points lines subset group"><p class="card-pkg"><a href="https://github.com/yutannihilation/gghighlight" target="_blank">{gghighlight}</a></p><p class="card-desc">Highlight points and lines in ggplot2 by condition</p></div>
+          <div class="card" data-search="ggnewscale multiple fill color scales legend"><p class="card-pkg"><a href="https://github.com/eliocamp/ggnewscale" target="_blank">{ggnewscale}</a></p><p class="card-desc">Multiple fill and colour scales in a single ggplot2 plot</p></div>
+          <div class="card" data-search="ggprism graphpad prism style scientific"><p class="card-pkg"><a href="https://csdaw.github.io/ggprism/" target="_blank">{ggprism}</a></p><p class="card-desc">ggplot2 extension inspired by GraphPad Prism aesthetics</p></div>
+          <div class="card" data-search="ggsci scientific journal color palette nature science"><p class="card-pkg"><a href="https://nanx.me/ggsci/" target="_blank">{ggsci}</a></p><p class="card-desc">Scientific journal and sci-fi themed color palettes</p></div>
+          <div class="card" data-search="ggtext markdown html text rendering rich"><p class="card-pkg"><a href="https://github.com/wilkelab/ggtext" target="_blank">{ggtext}</a></p><p class="card-desc">Improved text rendering — markdown & HTML in ggplot2 labels</p></div>
+          <div class="card" data-search="ggthemes additional themes scales geoms economist wsj"><p class="card-pkg"><a href="https://jrnold.github.io/ggthemes/" target="_blank">{ggthemes}</a></p><p class="card-desc">Additional themes — Economist, WSJ, FiveThirtyEight and more</p></div>
+          <div class="card" data-search="hrbrthemes typographic centric opinionated fonts"><p class="card-pkg"><a href="https://github.com/hrbrmstr/hrbrthemes" target="_blank">{hrbrthemes}</a></p><p class="card-desc">Opinionated, typographic-centric ggplot2 themes (Roboto Condensed)</p></div>
+          <div class="card" data-search="paletteer color palette collection unified interface"><p class="card-pkg"><a href="https://emilhvitfeldt.github.io/paletteer/" target="_blank">{paletteer}</a></p><p class="card-desc">Collection of 2000+ color palettes in a single, unified R package</p></div>
+          <div class="card" data-search="thematic unified automatic theming lattice base r"><p class="card-pkg"><a href="https://rstudio.github.io/thematic/" target="_blank">{thematic}</a></p><p class="card-desc">Unified and automatic theming of ggplot2, lattice, and base R</p></div>
+          <div class="card" data-search="tvthemes tv shows palette game of thrones simpsons"><p class="card-pkg"><a href="https://ryo-n7.github.io/tvthemes/" target="_blank">{tvthemes}</a></p><p class="card-desc">ggplot2 themes and palettes based on popular TV shows</p></div>
+          <div class="card" data-search="ggrough roughjs hand drawn sketch style"><p class="card-pkg"><a href="https://xvrdm.github.io/ggrough/" target="_blank">{ggrough}</a></p><p class="card-desc">Convert ggplot2 charts to rough.js hand-drawn style</p></div>
+          <div class="card" data-search="ggpomological pomological botanical watercolour style"><p class="card-pkg"><a href="https://www.garrickadenbuie.com/project/ggpomological/" target="_blank">{ggpomological}</a></p><p class="card-desc">Pomological / botanical watercolour plot theme for ggplot2</p></div>
+        </div>
+      </div>
+
+      <!-- Presentation -->
+      <div class="subsection" id="sub-presentation">
+        <p class="subsection-title">Presentation, Composition &amp; Scales</p>
+        <div class="cards">
+          <div class="card" data-search="cowplot streamlined annotation composition layout"><p class="card-pkg"><a href="https://wilkelab.org/cowplot/" target="_blank">{cowplot}</a></p><p class="card-desc">Streamlined plot theme and plot annotations — multi-panel figures</p></div>
+          <div class="card" data-search="gganimate animation gif animated graphics grammar"><p class="card-pkg"><a href="https://gganimate.com/" target="_blank">{gganimate}</a></p><p class="card-desc">Grammar of Animated Graphics — transition_* functions for GIF/video</p></div>
+          <div class="card" data-search="ggforce accelerating mark hull zoom sina"><p class="card-pkg"><a href="https://ggforce.data-imaginist.com/" target="_blank">{ggforce}</a></p><p class="card-desc">Accelerating ggplot2 — sina plots, zooming, hull marks</p></div>
+          <div class="card" data-search="ggiraph interactive html widget tooltip hover"><p class="card-pkg"><a href="https://davidgohel.github.io/ggiraph/" target="_blank">{ggiraph}</a></p><p class="card-desc">Make ggplot2 graphics interactive — tooltips, hover, click</p></div>
+          <div class="card" data-search="patchwork compose layout multi panel grid arrange"><p class="card-pkg"><a href="https://patchwork.data-imaginist.com/" target="_blank">{patchwork}</a></p><p class="card-desc">The composer of ggplots — easily combine multiple plots</p></div>
+          <div class="card" data-search="plotly interactive graphing library htmlwidget"><p class="card-pkg"><a href="https://github.com/ropensci/plotly" target="_blank">{plotly}</a></p><p class="card-desc">Interactive graphing library — ggplotly() converts ggplot to plotly</p></div>
+          <div class="card" data-search="scales axis breaks format labels log percent"><p class="card-pkg"><a href="https://scales.r-lib.org/" target="_blank">{scales}</a></p><p class="card-desc">Tools for ggplot2 axis scales — breaks, labels, transformations</p></div>
+          <div class="card" data-search="geofacet geographic facet map layout states countries"><p class="card-pkg"><a href="https://hafen.github.io/geofacet/" target="_blank">{geofacet}</a></p><p class="card-desc">Geographical faceting — arrange panels in the shape of a map</p></div>
+          <div class="card" data-search="showtext fonts custom google font graph text"><p class="card-pkg"><a href="https://github.com/yixuan/showtext" target="_blank">{showtext}</a></p><p class="card-desc">Use custom and Google fonts more easily in R graphs</p></div>
+        </div>
+      </div>
+
+      <!-- Spatial -->
+      <div class="subsection" id="sub-spatial">
+        <p class="subsection-title">Spatial &amp; Maps</p>
+        <div class="cards">
+          <div class="card" data-search="ggmap maps google openstreetmap tiles background"><p class="card-pkg"><a href="https://github.com/dkahle/ggmap" target="_blank">{ggmap}</a></p><p class="card-desc">Plot maps with ggplot2 — Google Maps, Stamen, OpenStreetMap tiles</p></div>
+          <div class="card" data-search="ggspatial spatial features sf north arrow scale bar"><p class="card-pkg"><a href="https://paleolimbot.github.io/ggspatial/" target="_blank">{ggspatial}</a></p><p class="card-desc">Enhance spatial visualization — north arrows, scale bars, sf layers</p></div>
+          <div class="card" data-search="rayshader 2d 3d mapping elevation terrain render"><p class="card-pkg"><a href="https://github.com/tylermorganwall/rayshader" target="_blank">{rayshader}</a></p><p class="card-desc">2D and 3D mapping & data visualization with ray-traced shadows</p></div>
+          <div class="card" data-search="ggOceanMaps oceanographic ocean bathymetry sea research"><p class="card-pkg"><a href="https://github.com/MikkoVihtakari/ggOceanMaps/" target="_blank">{ggOceanMaps}</a></p><p class="card-desc">Plot oceanographic research data on maps using ggplot2</p></div>
+          <div class="card" data-search="ggsn north symbol scale bar map cartography"><p class="card-pkg"><a href="http://oswaldosantos.github.io/ggsn/" target="_blank">{ggsn}</a></p><p class="card-desc">Add north symbols and scale bars to ggplot/ggmap maps</p></div>
+          <div class="card" data-search="mapSpain spain administrative boundaries ccaa provinces"><p class="card-pkg"><a href="https://dieghernan.github.io/mapSpain/" target="_blank">{mapSpain}</a></p><p class="card-desc">Administrative boundaries of Spain for ggplot2</p></div>
+          <div class="card" data-search="urbnmapr us usa state county alaska hawaii map"><p class="card-pkg"><a href="https://urbaninstitute.github.io/urbnmapr/index.html" target="_blank">{urbnmapr}</a></p><p class="card-desc">US state and county maps with Alaska and Hawaii properly inset</p></div>
+          <div class="card" data-search="sugarbag hexagon tessellated map australia"><p class="card-pkg"><a href="https://srkobakian.github.io/sugarbag/" target="_blank">{sugarbag}</a></p><p class="card-desc">Tessellated hexagon maps — equal-area choropleth for Australia</p></div>
+        </div>
+      </div>
+
+      <!-- Icons & Images -->
+      <div class="subsection" id="sub-icons">
+        <p class="subsection-title">Icons, Patterns &amp; Images</p>
+        <div class="cards">
+          <div class="card" data-search="emoGG emoji unicode plot points"><p class="card-pkg"><a href="https://github.com/dill/emoGG" target="_blank">{emoGG}</a></p><p class="card-desc">Use emoji as plot points in ggplot2</p></div>
+          <div class="card" data-search="ggflags flag country geom national"><p class="card-pkg"><a href="https://github.com/rensa/ggflags" target="_blank">{ggflags}</a></p><p class="card-desc">Flag geom for ggplot2 — use country flags as data points</p></div>
+          <div class="card" data-search="ggimage image png raster plot point marker"><p class="card-pkg"><a href="https://github.com/GuangchuangYu/ggimage" target="_blank">{ggimage}</a></p><p class="card-desc">Use images as geom points or backgrounds in ggplot2</p></div>
+          <div class="card" data-search="ggpattern pattern fill stripe crosshatch texture"><p class="card-pkg"><a href="https://coolbutuseless.github.io/package/ggpattern/index.html" target="_blank">{ggpattern}</a></p><p class="card-desc">ggplot2 geoms with pattern fills — stripes, crosshatch, image fills</p></div>
+        </div>
+      </div>
+
+      <!-- Data & Models -->
+      <div class="subsection" id="sub-data">
+        <p class="subsection-title">Data &amp; Statistical Models</p>
+        <div class="cards">
+          <div class="card" data-search="GGally pairs plot matrix extensions ggplot2"><p class="card-pkg"><a href="https://ggobi.github.io/ggally/index.html" target="_blank">{GGally}</a></p><p class="card-desc">R package extending ggplot2 — pairs plots, parallel coordinates</p></div>
+          <div class="card" data-search="ggdist distribution uncertainty tidybayes posterior"><p class="card-pkg"><a href="http://andrie.github.io/ggdendro/" target="_blank">{ggdendro}</a></p><p class="card-desc">Extract dendrogram data for plotting with ggplot2</p></div>
+          <div class="card" data-search="ggeffects marginal effects regression model tidy"><p class="card-pkg"><a href="https://strengejacke.github.io/ggeffects/" target="_blank">{ggeffects}</a></p><p class="card-desc">Tidy data frames of marginal effects for ggplot2 plots</p></div>
+          <div class="card" data-search="ggfortify autoplot fortify popular R packages pca survival"><p class="card-pkg"><a href="https://github.com/sinhrks/ggfortify" target="_blank">{ggfortify}</a></p><p class="card-desc">autoplot() support for PCA, survival, time series and more</p></div>
+          <div class="card" data-search="gglm linear model diagnostics residuals fitted"><p class="card-pkg"><a href="https://github.com/graysonwhite/gglm" target="_blank">{gglm}</a></p><p class="card-desc">Grammar of Graphics for linear model diagnostic plots</p></div>
+          <div class="card" data-search="ggstatsplot statistical analysis ggplot2 violin distribution"><p class="card-pkg"><a href="https://indrajeetpatil.github.io/ggstatsplot/" target="_blank">{ggstatsplot}</a></p><p class="card-desc">Enhance ggplot2 plots with statistical analysis and annotations</p></div>
+          <div class="card" data-search="naniar missing data tidy NA visualise imputation"><p class="card-pkg"><a href="https://github.com/njtierney/naniar" target="_blank">{naniar}</a></p><p class="card-desc">Tidy data structures, summaries, and visualisations for missing data</p></div>
+          <div class="card" data-search="survminer survival analysis kaplan meier km plot"><p class="card-pkg"><a href="https://rpkgs.datanovia.com/survminer/" target="_blank">{survminer}</a></p><p class="card-desc">Survival analysis and Kaplan–Meier visualization with ggplot2</p></div>
+          <div class="card" data-search="tidybayes bayesian posterior tidy geom interval"><p class="card-pkg"><a href="http://mjskay.github.io/tidybayes/" target="_blank">{tidybayes}</a></p><p class="card-desc">Bayesian analysis + tidy data + ggplot2 geoms for posteriors</p></div>
+          <div class="card" data-search="sjPlot social science statistics regression table plot"><p class="card-pkg"><a href="https://strengejacke.github.io/sjPlot/" target="_blank">{sjPlot}</a></p><p class="card-desc">Data visualization for statistics in social science</p></div>
+          <div class="card" data-search="edgebundle edge bundling network graph algorithm"><p class="card-pkg"><a href="https://github.com/schochastics/edgebundle" target="_blank">{edgebundle}</a></p><p class="card-desc">Edge bundling algorithms for network graph visualization</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── BOOKS ── -->
+    <section class="section" id="sec-books" data-category="books">
+      <div class="section-header">
+        <h2 class="section-title">Books</h2>
+        <span class="section-count">4</span>
+      </div>
+      <ul class="resource-list">
+        <li data-search="data visualization practical introduction kieran healy socviz">
+          <span class="ri-bullet"></span>
+          <span class="ri-body">
+            <a class="ri-title" href="http://socviz.co/" target="_blank">Data Visualization: A Practical Introduction</a>
+            <span class="ri-sub">Kieran Healy · socviz.co · Free online</span>
+          </span>
+        </li>
+        <li data-search="data visualization R rkabacoff practical guide">
+          <span class="ri-bullet"></span>
+          <span class="ri-body">
+            <a class="ri-title" href="https://rkabacoff.github.io/datavis/" target="_blank">Data Visualization with R</a>
+            <span class="ri-sub">Rob Kabacoff · rkabacoff.github.io · Free online</span>
+          </span>
+        </li>
+        <li data-search="fundamentals data visualization claus wilke serialmentor">
+          <span class="ri-bullet"></span>
+          <span class="ri-body">
+            <a class="ri-title" href="https://serialmentor.com/dataviz/" target="_blank">Fundamentals of Data Visualization</a>
+            <span class="ri-sub">Claus Wilke · serialmentor.com · Free online</span>
+          </span>
+        </li>
+        <li data-search="ggplot2 elegant graphics data analysis hadley wickham book">
+          <span class="ri-bullet"></span>
+          <span class="ri-body">
+            <a class="ri-title" href="https://ggplot2-book.org/" target="_blank">ggplot2: Elegant Graphics for Data Analysis</a>
+            <span class="ri-sub">Hadley Wickham · ggplot2-book.org · Free online · The definitive reference</span>
+          </span>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ── TUTORIALS ── -->
+    <section class="section" id="sec-tutorials" data-category="tutorials">
+      <div class="section-header">
+        <h2 class="section-title">Text Tutorials</h2>
+      </div>
+
+      <!-- Beginner -->
+      <div class="subsection">
+        <p class="subsection-title">Beginner · Introduction</p>
+        <ul class="resource-list">
+          <li data-search="grammar guide ggplot2 introduction beginner evamaerey"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://evamaerey.github.io/ggplot2_grammar_guide/about" target="_blank">A ggplot2 Grammar Guide</a><span class="ri-sub">evamaerey.github.io · Layered grammar explained visually</span></span></li>
+          <li data-search="simple introduction graphing philosophy ggplot2 beginner"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://tomhopper.me/2014/03/28/a-simple-introduction-to-the-graphing-philosophy-of-ggplot2/" target="_blank">A Simple Introduction to the Graphing Philosophy of ggplot2</a><span class="ri-sub">tomhopper.me · Concepts from first principles</span></span></li>
+          <li data-search="aesthetics geoms mappings scales what beginner tutorial"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://ggplot2tutor.com/beginner_tutorial/beginner_tutorial/" target="_blank">Aesthetics, Geoms, Mappings, Scales — What?</a><span class="ri-sub">ggplot2tutor.com · Core concepts clearly explained</span></span></li>
+          <li data-search="beautiful charts R ggplot2 introduction minimaxir tutorial"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://minimaxir.com/2015/02/ggplot-tutorial/" target="_blank">How to Make Beautiful Charts with R and ggplot2</a><span class="ri-sub">minimaxir.com · Step-by-step with real datasets</span></span></li>
+          <li data-search="ggplot2 cheatsheet quickref r-statistics beginner"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="http://r-statistics.co/ggplot2-cheatsheet.html" target="_blank">ggplot2 Quickref Cheatsheet</a><span class="ri-sub">r-statistics.co · Most-used commands at a glance</span></span></li>
+          <li data-search="top 50 ggplot2 visualizations master list R code examples"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html" target="_blank">Top 50 ggplot2 Visualizations — The Master List</a><span class="ri-sub">r-statistics.co · Full R code for 50 chart types</span></span></li>
+          <li data-search="ggplot2 tutorial beautiful plotting cedric scherer 2019"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://cedricscherer.netlify.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/" target="_blank">A ggplot2 Tutorial for Beautiful Plotting in R</a><span class="ri-sub">Cédric Scherer · Comprehensive step-by-step guide</span></span></li>
+          <li data-search="sthda statistical tools ggplot2 essentials wiki"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="http://www.sthda.com/english/wiki/ggplot2-essentials" target="_blank">ggplot2 Essentials — STHDA</a><span class="ri-sub">sthda.com · Modular, searchable wiki-style reference</span></span></li>
+        </ul>
+      </div>
+
+      <!-- Theme Customisation -->
+      <div class="subsection">
+        <p class="subsection-title">Theme Customisation</p>
+        <ul class="resource-list">
+          <li data-search="10 levels ggplot2 basic beautiful medium compassred"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://medium.com/compassred-data-blog/10-levels-of-ggplot2-from-basic-to-beautiful-5ce3c4e7624f" target="_blank">10 Levels of ggplot2: From Basic to Beautiful</a><span class="ri-sub">Medium · Progressive refinement of one chart</span></span></li>
+          <li data-search="complete guide scales ggplot2tor axis ticks labels"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://ggplot2tor.com/scales/" target="_blank">A Complete Guide to Scales</a><span class="ri-sub">ggplot2tor.com · Every scale_* function explained</span></span></li>
+          <li data-search="creating using custom ggplot2 themes themockup thomas mock"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://themockup.blog/posts/2020-12-26-creating-and-using-custom-ggplot2-themes/" target="_blank">Creating and Using Custom ggplot2 Themes</a><span class="ri-sub">themockup.blog · Build your own reusable theme</span></span></li>
+          <li data-search="ggplot wizardry hands-on outlier conference cedric scherer"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://z3tt.github.io/OutlierConf2021/" target="_blank">ggplot Wizardry Hands-On</a><span class="ri-sub">Cédric Scherer · OutlierConf 2021 workshop materials</span></span></li>
+          <li data-search="creating corporate colour palettes ggplot2 drsimonj branding"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://drsimonj.svbtle.com/creating-corporate-colour-palettes-for-ggplot2" target="_blank">Creating Corporate Colour Palettes for ggplot2</a><span class="ri-sub">drsimonj.svbtle.com · Brand colours in ggplot2</span></span></li>
+          <li data-search="evolution ggplot cedric scherer episode 1 step refinement"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://cedricscherer.netlify.com/2019/05/17/the-evolution-of-a-ggplot-ep.-1/" target="_blank">The Evolution of a ggplot (Ep. 1)</a><span class="ri-sub">Cédric Scherer · Detailed iterative design walkthrough</span></span></li>
+        </ul>
+      </div>
+
+      <!-- Geometrics Tutorials -->
+      <div class="subsection">
+        <p class="subsection-title">Specific Geoms</p>
+        <ul class="resource-list">
+          <li data-search="boxplot exploring ggplot2 limits style usgs waterdata"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://waterdata.usgs.gov/blog/boxplots/" target="_blank">Exploring ggplot2 Boxplots — Limits and Style</a><span class="ri-sub">USGS Water Data · Detailed boxplot customization</span></span></li>
+          <li data-search="heatmaps ggplot2 themockup thomas mock tile gradient"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://themockup.blog/posts/2020-08-28-heatmaps-in-ggplot2/" target="_blank">Heatmaps in ggplot2</a><span class="ri-sub">themockup.blog · Build effective heatmaps from scratch</span></span></li>
+          <li data-search="real emojis ggplot2 hvitfeldt unicode text point"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://www.hvitfeldt.me/blog/real-emojis-in-ggplot2/" target="_blank">Real Emojis in ggplot2</a><span class="ri-sub">hvitfeldt.me · Use actual emoji glyphs as geom points</span></span></li>
+          <li data-search="radial patterns ggplot2 circular polar anyene ijeamaka"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://ijeamaka-anyene.netlify.app/posts/2021-01-04-radial-patterns-in-ggplot2/" target="_blank">Radial Patterns in ggplot2</a><span class="ri-sub">Ijeamaka Anyene · Generative art with coord_polar()</span></span></li>
+        </ul>
+      </div>
+
+      <!-- Spatial Tutorials -->
+      <div class="subsection">
+        <p class="subsection-title">Spatial</p>
+        <ul class="resource-list">
+          <li data-search="bivariate maps ggplot2 sf timo grossenbacher choropleth"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://timogrossenbacher.ch/2019/04/bivariate-maps-with-ggplot2-and-sf/" target="_blank">Bivariate Maps with ggplot2 and sf</a><span class="ri-sub">Timo Grossenbacher · Two-variable choropleth maps</span></span></li>
+          <li data-search="inset maps ggplot2 geocompr zoom region overview"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://geocompr.github.io/post/2019/ggplot2-inset-maps/" target="_blank">Inset Maps with ggplot2</a><span class="ri-sub">Geocomputation with R · Create maps with inset detail</span></span></li>
+        </ul>
+      </div>
+
+      <!-- Statistics Tutorials -->
+      <div class="subsection">
+        <p class="subsection-title">Statistics</p>
+        <ul class="resource-list">
+          <li data-search="summary statistics ggplot2tutor mean median bar error"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://ggplot2tutor.com/summary_statistics/summary_statistics/" target="_blank">Summary Statistics in ggplot2</a><span class="ri-sub">ggplot2tutor.com · Adding stat summaries to plots</span></span></li>
+          <li data-search="demystifying stat layers ggplot2 yjunechoe geom stat"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://yjunechoe.github.io/posts/2020-09-26-demystifying-stat-layers-ggplot2/" target="_blank">Demystifying stat_ Layers in ggplot2</a><span class="ri-sub">Young Min Choe · Under the hood of stat_* functions</span></span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── VIDEO TUTORIALS ── -->
+    <section class="section" id="sec-videos" data-category="tutorials">
+      <div class="section-header">
+        <h2 class="section-title">Video Tutorials</h2>
+      </div>
+      <ul class="resource-list">
+        <li data-search="ggplot2 workshop part 1 video youtube beginner thomas lin pedersen"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://www.youtube.com/watch?v=h29g21z0a68" target="_blank">ggplot2 Workshop — Part 1</a><span class="ri-sub">YouTube · Thomas Lin Pedersen · Beginner/intermediate</span></span></li>
+        <li data-search="ggplot2 workshop part 2 video youtube intermediate thomas lin pedersen"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://www.youtube.com/watch?v=0m4yywqNPVY" target="_blank">ggplot2 Workshop — Part 2</a><span class="ri-sub">YouTube · Thomas Lin Pedersen · Continues Part 1</span></span></li>
+        <li data-search="boxplots informative extension packages youtube how to"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://www.youtube.com/watch?v=kQ8CtRV0kSQ" target="_blank">How to Make Boxplots More Informative</a><span class="ri-sub">YouTube · ggplot2 + extension packages for richer boxplots</span></span></li>
+        <li data-search="data science visualization edx online course harvard"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://www.edx.org/course/data-science-visualization" target="_blank">edX — Data Science: Visualization</a><span class="ri-sub">edX · HarvardX · Full online course on data visualization in R</span></span></li>
+      </ul>
+    </section>
+
+    <!-- ── GALLERIES ── -->
+    <section class="section" id="sec-galleries" data-category="general">
+      <div class="section-header">
+        <h2 class="section-title">Galleries</h2>
+      </div>
+      <ul class="resource-list">
+        <li data-search="ggplot2 extensions gallery official tidyverse"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://exts.ggplot2.tidyverse.org/" target="_blank">ggplot2 Extensions Gallery</a><span class="ri-sub">Official curated gallery — exts.ggplot2.tidyverse.org</span></span></li>
+        <li data-search="R graph gallery chart types code examples recipes"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://www.r-graph-gallery.com/" target="_blank">The R Graph Gallery</a><span class="ri-sub">r-graph-gallery.com · Hundreds of chart types with R code</span></span></li>
+        <li data-search="R CHARTS charts graphs recipes ggplot2 base r lattice"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://r-charts.com/" target="_blank">R CHARTS</a><span class="ri-sub">r-charts.com · Chart recipes for ggplot2, base R, and more</span></span></li>
+      </ul>
+    </section>
+
+    <!-- ── BOOK CHAPTERS ── -->
+    <section class="section" id="sec-chapters" data-category="books">
+      <div class="section-header">
+        <h2 class="section-title">Book Chapters</h2>
+      </div>
+      <ul class="resource-list">
+        <li data-search="cookbook R graphs recipes base ggplot2 quick reference"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="http://www.cookbook-r.com/Graphs/" target="_blank">Cookbook for R — Graphs</a><span class="ri-sub">cookbook-r.com · Quick-reference recipes for common plots</span></span></li>
+        <li data-search="R for data science data visualisation chapter hadley wickham r4ds"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://r4ds.had.co.nz/data-visualisation.html" target="_blank">R for Data Science — Data Visualisation</a><span class="ri-sub">r4ds.had.co.nz · Chapter 3 · Best first chapter to read</span></span></li>
+        <li data-search="modern statistics biology high quality graphics R stanford bios221"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://web.stanford.edu/class/bios221/book/Chap-Graphics.html" target="_blank">Modern Statistics for Modern Biology — Graphics in R</a><span class="ri-sub">Stanford BIOS221 · High-quality scientific graphics</span></span></li>
+        <li data-search="quantitative politics R introduction ggplot2 qpolr political science"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="http://qpolr.com/dataviz.html" target="_blank">Quantitative Politics with R — Intro to ggplot2</a><span class="ri-sub">qpolr.com · Applied ggplot2 for political data</span></span></li>
+      </ul>
+    </section>
+
+    <!-- ── MISC ── -->
+    <section class="section" id="sec-misc" data-category="general">
+      <div class="section-header">
+        <h2 class="section-title">Miscellaneous</h2>
+      </div>
+      <ul class="resource-list">
+        <li data-search="generated list repos themes github jmcastagnetto"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://github.com/jmcastagnetto/ggplot2_themes_in_github/" target="_blank">Generated List of ggplot2 Themes on GitHub</a><span class="ri-sub">github.com · Auto-indexed collection of theme repos</span></span></li>
+        <li data-search="all hail ggplot2 10 years qz quartz anniversary article"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://qz.com/1007328/all-hail-ggplot2-the-code-powering-all-those-excellent-charts-is-10-years-old/" target="_blank">All Hail ggplot2 — The Code Powering Those Charts is 10 Years Old</a><span class="ri-sub">Quartz · The story behind ggplot2's creation and impact</span></span></li>
+        <li data-search="awesome R packages curated list community"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://awesome-r.com/" target="_blank">Awesome R</a><span class="ri-sub">awesome-r.com · Broader curated R ecosystem list</span></span></li>
+        <li data-search="comparing ggplot2 R base graphics flowingdata nathan yau"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://flowingdata.com/2016/03/22/comparing-ggplot2-and-r-base-graphics/" target="_blank">Comparing ggplot2 and R Base Graphics</a><span class="ri-sub">FlowingData · When to use ggplot2 vs base graphics</span></span></li>
+        <li data-search="most upvoted ggplot2 questions stack overflow votes community"><span class="ri-bullet"></span><span class="ri-body"><a class="ri-title" href="https://stackoverflow.com/questions/tagged/ggplot2?tab=Votes" target="_blank">Most Upvoted ggplot2 Questions — Stack Overflow</a><span class="ri-sub">stackoverflow.com · The community's most-asked ggplot2 questions</span></span></li>
+      </ul>
+    </section>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="empty-state">
+      <div class="empty-state-icon">◎</div>
+      <p>No results found for your search.</p>
+      <p style="margin-top:8px; font-size:11px;">Try a package name, geom type, or topic keyword.</p>
+    </div>
+
+  </main>
+</div>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <p>
+    <a href="https://github.com/pawan1198/pawan1198.github.io" target="_blank">pawan1198/pawan1198.github.io</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/sindresorhus/awesome" target="_blank">Awesome List</a>
+    &nbsp;·&nbsp;
+    <a href="https://ggplot2.tidyverse.org/" target="_blank">ggplot2.tidyverse.org</a>
+  </p>
+  <p class="f-row" style="margin-top:8px">
+    Built with ♥ for the R community &nbsp;·&nbsp;
+    <a href="https://github.com/pawan1198" target="_blank">@pawan1198</a>
+  </p>
+</footer>
+
+<!-- Back to top -->
+<button id="btt" title="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  /* ─── SEARCH ─── */
+  const searchEl = document.getElementById('search');
+  const countEl  = document.getElementById('search-count');
+  const emptyEl  = document.getElementById('empty-state');
+
+  // All searchable elements
+  function allSearchable() {
+    return [
+      ...document.querySelectorAll('.card'),
+      ...document.querySelectorAll('.resource-list li'),
+      ...document.querySelectorAll('.person-card'),
+    ];
+  }
+
+  function doSearch(query) {
+    const q = query.trim().toLowerCase();
+    const items = allSearchable();
+    let visible = 0;
+
+    items.forEach(el => {
+      const text = (
+        (el.dataset.search || '') + ' ' +
+        el.textContent
+      ).toLowerCase();
+      const match = !q || text.includes(q);
+      el.classList.toggle('hidden', !match);
+      if (match) visible++;
+    });
+
+    // Hide/show sections that are now empty
+    document.querySelectorAll('.section').forEach(sec => {
+      const hasVisible = sec.querySelectorAll('.card:not(.hidden), .resource-list li:not(.hidden), .person-card:not(.hidden)').length > 0;
+      sec.classList.toggle('hidden', q && !hasVisible);
+    });
+
+    countEl.textContent = q ? `${visible} result${visible !== 1 ? 's' : ''} for "${query}"` : '';
+    emptyEl.classList.toggle('visible', q && visible === 0);
+  }
+
+  searchEl.addEventListener('input', e => doSearch(e.target.value));
+
+  /* ─── FILTER BUTTONS ─── */
+  const filterMap = {
+    all:      null,
+    packages: ['packages'],
+    tutorials:['tutorials'],
+    books:    ['books'],
+    spatial:  ['spatial','packages'],   // will also filter by keyword
+    themes:   ['themes','packages'],
+    people:   ['people'],
+  };
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      const f = btn.dataset.filter;
+
+      document.querySelectorAll('.section').forEach(sec => {
+        if (f === 'all') {
+          sec.classList.remove('hidden');
+          return;
+        }
+        const cat = sec.dataset.category || '';
+        const id  = sec.id || '';
+        let show = false;
+        if (f === 'packages')  show = cat === 'packages';
+        if (f === 'tutorials') show = cat === 'tutorials';
+        if (f === 'books')     show = cat === 'books';
+        if (f === 'people')    show = cat === 'people' || id === 'sec-people';
+        if (f === 'spatial')   show = id === 'sub-spatial' || sec.contains(document.getElementById('sub-spatial'));
+        if (f === 'themes')    show = id === 'sub-themes' || sec.contains(document.getElementById('sub-themes'));
+
+        // For sub-section filters, show the parent section but hide other subsections
+        sec.classList.toggle('hidden', !show);
+      });
+
+      // Special: show parent section for spatial/themes
+      if (f === 'spatial' || f === 'themes') {
+        document.getElementById('sec-packages').classList.remove('hidden');
+        document.querySelectorAll('.subsection').forEach(sub => {
+          const targetId = f === 'spatial' ? 'sub-spatial' : 'sub-themes';
+          sub.style.display = sub.id === targetId ? '' : 'none';
+        });
+      } else {
+        document.querySelectorAll('.subsection').forEach(sub => sub.style.display = '');
+      }
+
+      // Clear search on filter change
+      searchEl.value = '';
+      doSearch('');
+      allSearchable().forEach(el => el.classList.remove('hidden'));
+      emptyEl.classList.remove('visible');
+    });
+  });
+
+  /* ─── BACK TO TOP ─── */
+  const btt = document.getElementById('btt');
+  window.addEventListener('scroll', () => {
+    btt.classList.toggle('visible', window.scrollY > 400);
+  });
+
+  /* ─── TOC ACTIVE STATE ─── */
+  const sections = document.querySelectorAll('.section, .subsection');
+  const tocLinks = document.querySelectorAll('.toc-list a');
+
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        tocLinks.forEach(a => {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => { if (s.id) obs.observe(s); });
+
+  /* ─── ANIMATE CARDS ON SCROLL ─── */
+  const cardObs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.card, .person-card').forEach((el, i) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(12px)';
+    el.style.transition = `opacity .4s ${(i % 8) * 0.05}s ease, transform .4s ${(i % 8) * 0.05}s ease, border-color .2s, box-shadow .2s`;
+    cardObs.observe(el);
+  });
+</script>
+</body>
+</html>
